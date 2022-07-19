@@ -49,10 +49,20 @@ func Loops() {
 	wg.Wait()
 }
 
+func Empty_loop() int {
+	max := int(math.Pow(2, 20))
+	v := 0
+	for i := 0; i < max; i++ {
+		v = i
+	}
+	return v
+}
+
 func main() {
 	fmt.Println("函数运行开始！")
 	start := time.Now()
 	Loops()
+	//Empty_loop()
 	elapsed := time.Since(start)
 	fmt.Printf("函数运行时间：%v", elapsed)
 }
