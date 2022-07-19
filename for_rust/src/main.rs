@@ -25,11 +25,11 @@ fn loops() {
             println!("Cpu:{cpu} Start:{start} End:{end}");
             for cusor in start..end {
                 let mut n = cusor;
-                //let mut _sum = 0;
+                let mut _sum = 0;
                 while n > 0 {
-                    //if n & 1 == 1 {
-                        //_sum += 1;
-                    //}
+                    if n & 1 == 1 {
+                      _sum += 1;
+                    }
                     n >>= 1;
                 }
             }
