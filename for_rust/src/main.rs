@@ -3,9 +3,9 @@ extern crate num_cpus;
 use std::thread;
 use std::time::SystemTime;
 
-fn loops_loop() {
+fn loops_loop(len: u32, tag: u32) {
     //获取最大循环
-    let maxloops: u32 = 2u32.pow(30);
+    let maxloops: u32 = 2u32.pow(len);
     //获取CPU数量
     let cpus: u32 = num_cpus::get() as u32;
     //获取每个CPU均分的数量
@@ -28,12 +28,18 @@ fn loops_loop() {
             let mut cusor = start;
             loop {
                 let mut n = cusor;
-                let mut _sum = 0;
+                let mut sum = 0;
+                let mut nmb = 1;
                 while n > 0 {
                     if n & 1 == 1 {
-                        _sum += 1;
+                        sum += nmb;
                     }
                     n >>= 1;
+                    nmb += 1;
+                }
+                if sum == tag {
+                    println!("Got Number is :{:?}", sum);
+                    break;
                 }
                 cusor += 1;
                 if cusor & end == end {
@@ -49,16 +55,16 @@ fn loops_loop() {
     }
 }
 
-fn loops() {
+fn loops(len: u32, tag: u32) {
     //获取最大循环
-    let maxloops: u32 = 2u32.pow(30);
+    let maxloops: u32 = 2u32.pow(len);
     //获取CPU数量
     let cpus: u32 = num_cpus::get() as u32;
     //获取每个CPU均分的数量
     let perloop: u32 = maxloops / cpus;
     //获取剩余数量
     let addloop: u32 = maxloops % cpus;
-    println!("Max Loop:{maxloops}\nHave CPUs:{cpus}\nPerLoop:{perloop}\nAddLoop:{addloop}\n");
+    println!("Max Loop:{maxloops}\nHave CPUs:{cpus}\nPerLoop:{perloop}\nAddLoop:{addloop}");
 
     let mut start: u32 = 0;
     let mut handles = vec![];
@@ -71,12 +77,18 @@ fn loops() {
             println!("Cpu:{cpu} Start:{start} End:{end}");
             for cusor in start..end {
                 let mut n = cusor;
-                let mut _sum = 0;
+                let mut sum = 0;
+                let mut nmb = 1;
                 while n > 0 {
                     if n & 1 == 1 {
-                        _sum += 1;
+                        sum += nmb;
                     }
                     n >>= 1;
+                    nmb += 1;
+                }
+                if sum == tag {
+                    println!("Got {sum}");
+                    break;
                 }
             }
         });
@@ -90,9 +102,9 @@ fn loops() {
 
 fn empty_loop() {
     let max = 2u32.pow(20);
-    let mut v = 0;
+    let mut _v = 0;
     for i in 0..max {
-        v = i;
+        _v = i;
     }
 }
 
@@ -100,8 +112,8 @@ fn main() {
     let sy_time = SystemTime::now();
 
     println!("函数运行开始！");
-    //loops_loop();
-    loops();
+    //loops_loop(30, 900);
+    loops(30, 900);
     //empty_loop();
     let mut t: f64 = sy_time.elapsed().unwrap().as_micros() as f64;
     t = t / 1000000.0;

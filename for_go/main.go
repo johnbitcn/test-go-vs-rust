@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-func Loops() {
+func Loops(lens int, tag int) {
 	cpus := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpus)
 	//maxloops := 2 ^ 30
-	maxloops := int(math.Pow(2, 30))
+	maxloops := int(math.Pow(2, float64(lens)))
 	perloops := maxloops / cpus
 	addloops := maxloops % cpus
 	fmt.Printf("Got CPUs: %d\nMax Loops:%d\nPerLoops:%d\nAddLoops:%d\n",
@@ -21,14 +21,17 @@ func Loops() {
 	thread := func(st int, en int, wg *sync.WaitGroup) {
 		for i := st; i < en; i++ {
 			sum := 0
+			nmb := 1
 			for n := i; n > 0; n >>= 1 {
 				if n&1 == 1 {
-					sum += 1
+					sum += nmb
 				}
+				nmb++
 			}
-			//if sum == 29 {
-			//	fmt.Println("Found Number 29!")
-			//}
+			if sum == tag {
+				fmt.Printf("Got Number is :%d", sum)
+				break
+			}
 		}
 		wg.Done()
 	}
@@ -61,7 +64,7 @@ func Empty_loop() int {
 func main() {
 	fmt.Println("函数运行开始！")
 	start := time.Now()
-	Loops()
+	Loops(30, 900)
 	//Empty_loop()
 	elapsed := time.Since(start)
 	fmt.Printf("函数运行时间：%v", elapsed)
